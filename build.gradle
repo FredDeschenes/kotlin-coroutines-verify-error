@@ -1,0 +1,55 @@
+plugins {
+    id "nebula.kotlin" version "1.2.0"
+    id "nebula.dependency-recommender" version "5.0.0"
+}
+
+group 'test'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencyRecommendations {
+    mavenBom module: "org.jdbi:jdbi3-bom:3.0.0"
+    map recommendations: [
+            "org.jetbrains.kotlinx:*"                : "0.19.3",
+            "com.h2database:*"                       : "1.4.196",
+            "org.slf4j:*"                            : "1.7.25"
+    ]
+}
+
+dependencies {
+    compile(
+            "org.jdbi:jdbi3-core",
+            "org.jdbi:jdbi3-sqlobject",
+            "org.jdbi:jdbi3-kotlin",
+            "org.jdbi:jdbi3-kotlin-sqlobject"
+    )
+
+    compile(
+            'org.jetbrains.kotlinx:kotlinx-coroutines-core',
+            'org.jetbrains.kotlinx:kotlinx-coroutines-jdk8'
+    )
+
+    // Force current 'kotlin-reflect' to override the old one from 'jdbi3-kotlin-sqlobject'
+    compile "org.jetbrains.kotlin:kotlin-reflect"
+
+    compile 'com.h2database:h2'
+
+    compile 'org.slf4j:slf4j-simple'
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
+}
